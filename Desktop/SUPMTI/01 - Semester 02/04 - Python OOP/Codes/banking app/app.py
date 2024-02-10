@@ -7,4 +7,9 @@ hind = InterestRewardAcc(0,'Hind')
 john = SavingAcc(1000,'John')
 
 
+adil.transfer(100,hind)
+
+adil.transaction_history()
+hind.transaction_history()
+
 

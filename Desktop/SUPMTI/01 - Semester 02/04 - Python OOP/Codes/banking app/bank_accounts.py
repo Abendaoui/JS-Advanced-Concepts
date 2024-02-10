@@ -7,6 +7,7 @@ class BankAccount:
     def __init__(self,initial_amount,acc_name):
         self.balance = initial_amount
         self.name = acc_name
+        self.transaction_list = []
         
     def get_balance(self):
          print(f"Account '{self.name}'\nBalance : '${self.balance:.2f}'\n")
@@ -40,12 +41,30 @@ class BankAccount:
         except BalanceException as error:
             print(error)
     
-    def tranfers(self, amount,receiver):
+    def transaction_history(self):
+        if len(self.transaction_list) == 0:
+            print('No Transaction History Found')
+        else:
+            for transaction in self.transaction_list:
+                print('==>\t{} {} {} : ${}{}\n'.format(
+                transaction['sender'], 
+                transaction['access'], 
+                transaction['receiver'], 
+                transaction['sign'], 
+                transaction['amount']
+            ))
+                
+    def create_transaction(self,sender,receiver,amount,sign,access):
+        self.transaction_list.append({'sender':sender, 'receiver': receiver, 'amount':str(amount), 'sign':sign, 'access':access})
+                
+    def transfer(self, amount,receiver):
             try:
                 self.validate_receiver(receiver) # check
                 if(self.withdraw(amount)):
                     receiver.deposit(amount)
                     print('Transfer Complete.\n')
+                self.create_transaction(self.name,receiver.name,amount,'-','-->')
+                receiver.create_transaction(receiver.name,self.name,amount,'+','<--')
             except InstanceException as error:
                 print(error)
         
